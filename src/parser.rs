@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 
-use crate::{lexer::Lexer, token::Token};
+use crate::{expression::Expression, lexer::Lexer, token::Token};
 
 // public class Precedence {
 
@@ -84,11 +84,88 @@ impl PartialOrd for Precedence {
 
 struct Parser {
     lexer: Lexer,
+    cur_token: Token,
+    peek_token: Token,
 }
 
 impl Parser {
-    fn new(lexer: Lexer) -> Self {
-        Self { lexer }
+    fn new(mut lexer: Lexer) -> Self {
+        let cur_token = lexer.next_token();
+        let peek_token = lexer.next_token();
+        Self {
+            lexer,
+            cur_token,
+            peek_token,
+        }
+    }
+
+    fn next_token(&mut self) {
+        self.cur_token = self.peek_token.clone();
+        self.peek_token = self.lexer.next_token();
+    }
+
+    pub fn peek_precedence(&self) -> Precedence {
+        Precedence::get_precedence(&self.peek_token)
+    }
+
+    pub fn peek_token_is(&self, t: Token) -> bool {
+        self.peek_token == t
+    }
+
+    pub fn parse(&mut self) -> Expression {
+        self.parse_expression(Precedence::Lowest)
+    }
+
+    pub fn parse_expression(&mut self, precedence: Precedence) -> Expression {
+        let mut left = match self.parse_prefix_expression() {
+            Some(expr) => expr,
+            None => panic!("No prefix parse function for {:?}", self.cur_token),
+        };
+
+        while !self.peek_token_is(Token::Eof) && precedence < self.peek_precedence() {
+            left = match self.parse_infix_expression(left.clone()) {
+                Some(expr) => expr,
+                None => return left,
+            }
+        }
+
+        left
+    }
+
+    fn parse_prefix_expression(&mut self) -> Option<Expression> {
+        match self.cur_token.clone() {
+            Token::Minus => {
+                let operator: String = Token::Minus.into();
+                self.next_token();
+                let right = Box::new(self.parse_expression(Precedence::Prefix));
+                Some(Expression::Prefix { operator, right })
+            }
+            Token::LParen => {
+                self.next_token();
+                let expr = self.parse_expression(Precedence::Lowest);
+                self.next_token();
+                Some(expr)
+            }
+            Token::Num(literal) => Some(Expression::Number(literal.parse().unwrap())),
+            _ => None,
+        }
+    }
+
+    fn parse_infix_expression(&mut self, left: Expression) -> Option<Expression> {
+        match self.cur_token.clone() {
+            Token::Plus | Token::Minus | Token::Mul | Token::Div | Token::Power => {
+                self.next_token();
+                let precedence = Precedence::get_precedence(&self.cur_token);
+                let right = self.parse_expression(precedence);
+                self.next_token();
+                Some(Expression::Infix {
+                    left: Box::new(left),
+                    operator: self.cur_token.clone().into(),
+                    right: Box::new(right),
+                })
+            }
+            _ => None,
+        }
     }
 }
 
@@ -111,5 +188,13 @@ mod tests {
         assert!(Precedence::Lowest < Precedence::PlusMinus);
         assert!(Precedence::PlusMinus < Precedence::MulDiv);
         assert!(Precedence::Power > Precedence::MulDiv);
+    }
+
+    #[test]
+    fn test_parser() {
+        let lexer = Lexer::new(String::from("1 + 2"));
+        let mut parser = Parser::new(lexer);
+        let result = parser.parse();
+        dbg!(result);
     }
 }

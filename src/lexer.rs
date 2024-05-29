@@ -71,10 +71,8 @@ impl Lexer {
                 literal.push(self.ch);
                 self.read_char();
             }
-            Token::Float(literal.parse().unwrap())
-        } else {
-            Token::Int(literal.parse().unwrap())
         }
+        Token::Num(literal)
     }
 
     fn skip_whitespace(&mut self) {
@@ -98,18 +96,18 @@ mod tests {
 
     #[test]
     fn test_lexer() {
-        let input = "123 + 456 * 789 / (10 + 20)";
+        let input = "12.30 + 456 * 789 / (10 + 20)";
         let mut lexer = Lexer::new(input.to_string());
-        assert_eq!(lexer.next_token(), Token::Int(123));
+        assert_eq!(lexer.next_token(), Token::Num("12.30".to_owned()));
         assert_eq!(lexer.next_token(), Token::Plus);
-        assert_eq!(lexer.next_token(), Token::Int(456));
+        assert_eq!(lexer.next_token(), Token::Num("456".to_owned()));
         assert_eq!(lexer.next_token(), Token::Mul);
-        assert_eq!(lexer.next_token(), Token::Int(789));
+        assert_eq!(lexer.next_token(), Token::Num("789".to_owned()));
         assert_eq!(lexer.next_token(), Token::Div);
         assert_eq!(lexer.next_token(), Token::LParen);
-        assert_eq!(lexer.next_token(), Token::Int(10));
+        assert_eq!(lexer.next_token(), Token::Num("10".to_owned()));
         assert_eq!(lexer.next_token(), Token::Plus);
-        assert_eq!(lexer.next_token(), Token::Int(20));
+        assert_eq!(lexer.next_token(), Token::Num("20".to_owned()));
         assert_eq!(lexer.next_token(), Token::RParen);
         assert_eq!(lexer.next_token(), Token::Eof);
     }
