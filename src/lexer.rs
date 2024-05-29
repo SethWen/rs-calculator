@@ -84,6 +84,14 @@ impl Lexer {
     }
 }
 
+impl Iterator for Lexer {
+    type Item = Token;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        Some(self.next_token())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

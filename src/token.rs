@@ -4,15 +4,16 @@ pub enum Token {
     Minus,
     Mul,
     Div,
+
+    Power,
+
     LParen,
     RParen,
 
     Eq,
-    Assign,
 
     Float(f64),
     Int(i64),
-    Ident(String),
 
     Illegal,
     Eof,
