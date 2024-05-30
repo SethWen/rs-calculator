@@ -2,37 +2,6 @@ use std::cmp::Ordering;
 
 use crate::{expression::Expression, lexer::Lexer, token::Token};
 
-// public class Precedence {
-
-//     public static final int LOWEST = 0;
-//     public static final int EQUALS = 1;
-//     public static final int LESS_GREATER = 2;
-//     public static final int SUM = 3;
-
-//     public static final int PRODUCT = 4;
-
-//     public static final int POWER = 5;
-
-//     public static final int PREFIX = 6;
-//     public static final int CALL = 7;
-
-//     static HashMap<TokenType, Integer> precedences = new HashMap<>();
-
-//     static {
-//         precedences.put(TokenType.PLUS, SUM);
-//         precedences.put(TokenType.MINUS, SUM);
-//         precedences.put(TokenType.SLASH, PRODUCT);
-//         precedences.put(TokenType.ASTERISK, PRODUCT);
-//         precedences.put(TokenType.HAT, POWER);
-//         precedences.put(TokenType.LPAREN, CALL);
-//     }
-
-//     static int getPrecedence(TokenType t) {
-//         return precedences.getOrDefault(t, LOWEST);
-//     }
-
-// }
-
 #[derive(Debug, PartialEq)]
 enum Precedence {
     Lowest = 0,
@@ -123,6 +92,7 @@ impl Parser {
         };
 
         while !self.peek_token_is(Token::Eof) && precedence < self.peek_precedence() {
+            self.next_token();
             left = match self.parse_infix_expression(left.clone()) {
                 Some(expr) => expr,
                 None => return left,
@@ -154,7 +124,6 @@ impl Parser {
     fn parse_infix_expression(&mut self, left: Expression) -> Option<Expression> {
         match self.cur_token.clone() {
             Token::Plus | Token::Minus | Token::Mul | Token::Div | Token::Power => {
-                self.next_token();
                 let precedence = Precedence::get_precedence(&self.cur_token);
                 let right = self.parse_expression(precedence);
                 self.next_token();

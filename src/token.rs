@@ -43,6 +43,42 @@ impl From<Token> for String {
     }
 }
 
+impl Token {
+    pub fn could_be_prefix_expr(&self) -> bool {
+        matches!(self, Token::Minus | Token::LParen | Token::Num(_))
+    }
+
+    pub fn could_be_infix_expr(&self) -> bool {
+        matches!(
+            self,
+            Token::Plus | Token::Minus | Token::Mul | Token::Div | Token::Power
+        )
+    }
+
+    pub fn prefix_op(&self, literal: String) -> f64 {
+        match self {
+            Token::Minus => 0f64 - literal.parse::<f64>().unwrap(),
+            Token::LParen => todo!(),
+            Token::Num(_) => todo!(),
+            _ => todo!(),
+        }
+    }
+
+    pub fn infix_op(&self, left: String, right: String) -> f64 {
+        match self {
+            Token::Plus => left.parse::<f64>().unwrap() + right.parse::<f64>().unwrap(),
+            Token::Minus => left.parse::<f64>().unwrap() - right.parse::<f64>().unwrap(),
+            Token::Mul => left.parse::<f64>().unwrap() * right.parse::<f64>().unwrap(),
+            Token::Div => left.parse::<f64>().unwrap() / right.parse::<f64>().unwrap(),
+            Token::Power => left
+                .parse::<f64>()
+                .unwrap()
+                .powf(right.parse::<f64>().unwrap()),
+            _ => todo!(),
+        }
+    }
+}
+
 #[test]
 fn test_basic() {
     assert!(Token::Plus == Token::Plus.clone());
