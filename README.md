@@ -1,3 +1,3 @@
-# 用 rust 实现一个简单的计算器
+# rs-my-own-x
 
-编译器入门
+rs-my-own-x is a Rust library for doing X.
