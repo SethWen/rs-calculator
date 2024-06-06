@@ -1,6 +1,8 @@
 use std::cmp::Ordering;
 
-use crate::{expression::Expression, lexer::Lexer, token::Token};
+use crate::expression::Expression;
+use crate::lexer::Lexer;
+use crate::token::Token;
 
 #[derive(Debug, PartialEq)]
 enum Precedence {
@@ -61,11 +63,7 @@ impl Parser {
     fn new(mut lexer: Lexer) -> Self {
         let cur_token = lexer.next_token();
         let peek_token = lexer.next_token();
-        Self {
-            lexer,
-            cur_token,
-            peek_token,
-        }
+        Self { lexer, cur_token, peek_token }
     }
 
     fn next_token(&mut self) {

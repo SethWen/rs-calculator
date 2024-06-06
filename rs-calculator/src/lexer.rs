@@ -9,12 +9,7 @@ pub struct Lexer {
 
 impl Lexer {
     pub fn new(input: String) -> Self {
-        let mut l = Lexer {
-            input,
-            position: 0,
-            read_position: 0,
-            ch: '\0',
-        };
+        let mut l = Lexer { input, position: 0, read_position: 0, ch: '\0' };
         l.read_char();
         l
     }

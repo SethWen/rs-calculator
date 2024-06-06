@@ -1,4 +1,4 @@
 
 [workspace]
 resolver = "2"
-members = [ "rs-calculator" ]
+members = [ "rs-calculator" , "rs-lockless"]

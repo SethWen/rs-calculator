@@ -7,3 +7,5 @@ rs-my-own-x is a Rust library for doing X.
 - [ ] Calculator
 - [ ] Lock-free queue
 - [ ] Minimuim async runtime
+- [ ] Lru cache
+- [ ] ...

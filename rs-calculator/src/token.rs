@@ -49,10 +49,7 @@ impl Token {
     }
 
     pub fn could_be_infix_expr(&self) -> bool {
-        matches!(
-            self,
-            Token::Plus | Token::Minus | Token::Mul | Token::Div | Token::Power
-        )
+        matches!(self, Token::Plus | Token::Minus | Token::Mul | Token::Div | Token::Power)
     }
 
     pub fn prefix_op(&self, literal: String) -> f64 {
@@ -70,10 +67,7 @@ impl Token {
             Token::Minus => left.parse::<f64>().unwrap() - right.parse::<f64>().unwrap(),
             Token::Mul => left.parse::<f64>().unwrap() * right.parse::<f64>().unwrap(),
             Token::Div => left.parse::<f64>().unwrap() / right.parse::<f64>().unwrap(),
-            Token::Power => left
-                .parse::<f64>()
-                .unwrap()
-                .powf(right.parse::<f64>().unwrap()),
+            Token::Power => left.parse::<f64>().unwrap().powf(right.parse::<f64>().unwrap()),
             _ => todo!(),
         }
     }
