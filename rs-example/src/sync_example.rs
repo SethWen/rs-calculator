@@ -1,14 +1,7 @@
 use std::sync::{Arc, Barrier};
 use std::thread;
 
-mod expression;
-mod lexer;
-mod parser;
-mod token;
-
-fn main() {
-    println!("Hello, world!");
-
+fn learning_barrier() {
     let barrier = Arc::new(Barrier::new(3)); // 创建一个Barrier，需要等待3个线程
 
     let mut handles = vec![];
@@ -28,4 +21,9 @@ fn main() {
         println!("result: {}", result);
     }
     println!("All threads have finished");
+}
+
+#[test]
+fn test_learning_barrier() {
+    learning_barrier();
 }
