@@ -8,4 +8,5 @@ rs-my-own-x is a Rust library for doing X.
 - [ ] Lock-free queue
 - [ ] Minimuim async runtime
 - [ ] Lru cache
+- [ ] Linked list into_iter/iter/iter_mut
 - [ ] ...

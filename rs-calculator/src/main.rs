@@ -18,7 +18,7 @@ fn main() {
             println!("Thread {:?} before the barrier", thread::current().id());
             c.wait(); // 等待所有线程都执行到这里
             println!("Thread {:?} after the barrier", thread::current().id());
-            return i;
+            i
         });
         handles.push(handle);
     }

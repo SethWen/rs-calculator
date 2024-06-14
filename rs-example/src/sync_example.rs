@@ -15,7 +15,7 @@ fn learning_barrier() {
             thread::sleep(Duration::from_millis(5000));
             c.wait(); // 等待所有线程都执行到这里
             println!("Thread {:?} after the barrier", thread::current().id());
-            return i;
+            i
         });
         handles.push(handle);
     }
