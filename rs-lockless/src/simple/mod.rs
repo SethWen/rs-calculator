@@ -1,4 +1,5 @@
-mod linked_queue_safe;
-mod linked_queue_unsafe;
-mod linked_stack_safe;
-mod linked_stack_unsafe;
+mod linked_queue1;
+mod linked_queue2;
+mod linked_stack1;
+mod linked_stack2;
+mod linked_stack3;

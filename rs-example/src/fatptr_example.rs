@@ -82,8 +82,6 @@ fn main() {
     println!("Add: 3 + 2 = {}", test.add());
     println!("Sub: 3 - 2 = {}", test.sub());
     println!("Mul: 3 * 2 = {}", test.mul());
-
-    yield_now();
 }
 
 #[test]
