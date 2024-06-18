@@ -1,5 +1,6 @@
 use std::borrow::{Borrow, BorrowMut};
 use std::cell::RefCell;
+use std::collections::LinkedList;
 use std::fmt::{Debug, Display};
 use std::ptr::NonNull;
 use std::rc::Rc;
@@ -13,13 +14,23 @@ impl Node {
     fn new(data: i32) -> Self {
         Node { data, next: None }
     }
+
+    fn boxed(self) -> Box<Self> {
+        Box::new(self)
+    }
 }
+
+// impl Drop for Node {
+//     fn drop(&mut self) {
+//         println!("drop {}", self.data);
+//     }
+// }
 
 impl Display for Node {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self.next {
             Some(node) => {
-                let node = unsafe { node.as_ref() };
+                let node = node.as_ref();
                 write!(f, "Node({}) -> {}", self.data, node)
             }
             None => write!(f, "Node({}) -> null", self.data),
@@ -39,7 +50,7 @@ impl LinkedQueue {
     }
 
     fn enqueue(&mut self, data: i32) {
-        let mut new_node = Box::new(Node { data, next: None });
+        let mut new_node = Node::new(data).boxed();
         let raw_ptr: *mut _ = &mut *new_node;
         if !self.tail.is_null() {
             unsafe { (*self.tail).next = Some(new_node) };
@@ -52,7 +63,7 @@ impl LinkedQueue {
 
     fn dequeue(&mut self) -> Option<i32> {
         self.head.take().map(|head| {
-            let head = *head;
+            // let head = *head;
             self.head = head.next;
             if self.head.is_none() {
                 self.tail = std::ptr::null_mut();
