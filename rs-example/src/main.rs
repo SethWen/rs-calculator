@@ -3,9 +3,11 @@
 
 use std::collections::{LinkedList, VecDeque};
 
+mod decmac_example;
 mod fatptr_example;
 mod libc_example;
 mod pin_example;
+mod sqlite_example;
 mod sync_example;
 
 fn main() {
